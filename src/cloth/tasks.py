@@ -3,9 +3,9 @@ import sys
 from functools import partial
 from collections import defaultdict
 
-from fabric.api import run, env, sudo, task, runs_once
+from fabric.api import run, env, sudo, task, runs_once, local
 
-from cloth.utils import instances, use
+from cloth.utils import instances, use, ip
 
 
 module = sys.modules[__name__]
@@ -75,3 +75,12 @@ def updates():
 def upgrade():
     "Upgrade packages with apt-get"
     sudo("apt-get update; apt-get upgrade -y")
+
+
+@task
+@runs_once
+def shell():
+    "Instance remote interactive shell"
+    node = next(iter(env.nodes), None)
+    if node:
+        local('ssh {0}@{1}'.format(env.user, ip(node)))
