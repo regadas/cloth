@@ -20,39 +20,46 @@ To use just import some or all of the tasks into your fabric file. Or
 create a blank fabfile.py with the following contents.
 
     #! /usr/bin/env python
-    from cloth.tasks import *
+    from cloth import tasks as ec2
+
+    ec2.set_node_envs({
+        'preview': '^preview-',
+        'development': '^website-dev',
+        'production': '^website-prod'
+    })
 
 This will give you a good few commands.
 
     ⚡ fab -l
     Available commands:
 
-      all         All nodes
-      free        Show memory stats
-      list        List EC2 name and public and private ip address
-      nodes       Select nodes based on a regular expression
-      preview     Preview nodes
-      production  Production nodes
-      updates     Show package counts needing updates
-      upgrade     Upgrade packages with apt-get
-      uptime      Show uptime and load
+      ec2.all         All nodes
+      ec2.free        Show memory stats
+      ec2.list        List EC2 name and public and private ip address
+      ec2.nodes       Select nodes based on a regular expression
+      ec2.development Development nodes
+      ec2.staging     Staging nodes
+      ec2.production  Production nodes
+      ec2.updates     Show package counts needing updates
+      ec2.upgrade     Upgrade packages with apt-get
+      ec2.uptime      Show uptime and load
 
 Of most interest should be the 'all' and 'nodes' tasks. These allow you
 to load EC2 instances for further command running.
 
-    ⚡ fab all list
+    ⚡ fab ec2.all ec2.list
 
 The above should list all of your EC2 instances including the name and
 public and private ip addresses.
 
-    ⚡ fab nodes:"^production.*" list
+    ⚡ fab ec2.nodes:"^production.*" ec2.list
 
 The above should list all of your EC2 instances that start with
 'production'. This takes a regex as the argument so you can get whatever
 instances you like.
 
 
-    ⚡ fab all uptime
+    ⚡ fab ec2.all ec2.uptime
 
 As an example of running a command on a set of EC2 instances try the
 above. This should show the uptime and load averages for all your EC2
@@ -88,7 +95,7 @@ I could write a task like so:
 
 The run that task with:
 
-    ⚡ fab all passenger
+    ⚡ fab ec2.all passenger
 
 That task would only be run on the three backend instances.
 
